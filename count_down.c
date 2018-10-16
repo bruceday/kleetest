@@ -23,32 +23,35 @@ typedef struct {
 //     outC->init = kcg_true;
 // }
 
-void count_down_digital(inC_count_down_digital *inC, outC_count_down_digital *outC)
+void count_down_digital(kcg_bool Reset, kcg_int N,kcg_int cpt,kcg_bool init,kcg_int _L4)
 {
-	if (inC->Reset)
+	if (Reset)
 	{
-		outC->cpt = inC->N;
+		cpt = N;
 	}
-	else if (outC->init)
+	else if (init)
 	{
-		outC->cpt = inC->N;
+		cpt = N;
 	}
 	else
 	{
-		outC->cpt = outC->_L4;
+		cpt = _L4;
 	}
-	outC->_L4 = outC->cpt - 1;
-	outC->init = kcg_false;
+	_L4 =cpt - 1;
+	init = kcg_false;
 }
 
 void main()
 {
-	inC_count_down_digital inC;
-	outC_count_down_digital outC;
-	 klee_make_symbolic(&inC.N, sizeof(inC.N), "n");
-	 klee_make_symbolic(&inC.Reset, sizeof(inC.Reset), "r");
-	 klee_make_symbolic(&outC.cpt, sizeof(outC.cpt), "c");
-	 klee_make_symbolic(&outC.init, sizeof(outC.init), "i");
-	 klee_make_symbolic(&outC._L4, sizeof(outC._L4), "l");
-	 return count_down_digital(&inC,&outC);
+	kcg_bool Reset;
+	kcg_int N; 
+	kcg_int cpt;
+	kcg_bool init; 
+	kcg_int _L4;
+	klee_make_symbolic(&N, sizeof(N), "N");
+	klee_make_symbolic(&Reset, sizeof(Reset), "Reset");
+	klee_make_symbolic(&cpt, sizeof(cpt), "cpt");
+	klee_make_symbolic(&init, sizeof(init), "init");
+	klee_make_symbolic(&_L4, sizeof(_L4), "_L4");
+	return count_down_digital(Reset,N,cpt,init,_L4);
 }
